@@ -1,0 +1,47 @@
+---
+alwaysApply: true
+---
+Here's your full project specification and step-by-step implementation plan, updated to:
+
+    ✅ Use FastAPI for backend
+
+    ✅ Use Gatsby for frontend (hosted on Vercel)
+
+    ✅ Use AWS S3 for file storage
+
+    ✅ Use DynamoDB (Terraform-compatible) for metadata
+
+    ❌ No Terraform yet — we’ll prepare for it, but implement manually for now
+
+    🔐 Support secure, expiring, limited-download file links
+
+    📁 Project name: files.santonastaso.codes
+
+📄 Project Specification
+🧾 Summary
+
+files.santonastaso.codes is a secure file-sharing tool that allows users to upload a file and generate a private, expiring download link with a custom download limit — no account required. Files are stored in S3, and download metadata is tracked via DynamoDB.
+design have to be consistent to my portfolio https://santonastaso.codes, which is available locally at C:\Users\santo\Documents\github-projects\santonastaso.codes
+
+⚙️ Tech Stack
+Frontend
+Gatsby	Static frontend (React)
+Vercel	Frontend hosting
+Axios	HTTP client
+Tailwind (optional)	UI styling
+React Router	/upload, /file/:id routes
+
+Backend
+FastAPI	REST API backend
+Uvicorn	ASGI server for local development
+Boto3	AWS SDK for S3 & DynamoDB
+Pydantic	Request/response validation
+CORS middleware	Allow Gatsby → FastAPI calls
+python-dotenv	Environment variable management
+
+AWS Services
+S3	File upload & download (via presigned URLs)
+DynamoDB	Metadata store: expiry, download limits
+IAM	Secure API access (S3/DynamoDB roles)
+
+-python test
