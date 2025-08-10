@@ -68,7 +68,7 @@ git add .
 git commit -m "Initial commit: Secure file sharing application"
 
 # Add remote repository
-git remote add origin https://github.com/santonastaso/files.santonastaso.codes.git
+git remote add origin https://github.com/snts42/files.santonastaso.codes.git
 
 # Push to GitHub
 git push -u origin main
