@@ -1,20 +1,20 @@
 /** @type {import('gatsby').GatsbyConfig} */
 module.exports = {
   siteMetadata: {
-    siteUrl: `https://your-domain.com`,
-    name: 'Your Name',
-    title: `Secure File Sharing Application`,
-    description: `Secure, private file sharing with expiring links`,
-    author: `Your Name`,
-    github: `https://github.com/yourusername`,
-    linkedin: `https://www.linkedin.com/in/yourprofile/`,
-    resume: "https://your-domain.com/resume.pdf",
-    repository: `https://github.com/yourusername/secure-file-sharing`,
+    siteUrl: `https://files.santonastaso.codes`,
+    name: 'Alex Santonastaso',
+    title: `Alex Santonastaso - Secure File Sharing`,
+    description: `Secure, private file sharing `,
+    author: `Alex Santonastaso`,
+    github: `https://github.com/snts42`,
+    linkedin: `https://www.linkedin.com/in/alex-santonastaso/`,
+    resume: "https://santonastaso.codes/Alex-Santonastaso-CV.pdf",
+    repository: `https://github.com/snts42/files.santonastaso.codes`,
     about: `A secure, minimal, private file-sharing tool built with FastAPI, AWS S3, DynamoDB, Terraform, and Gatsby. Features include expiring links, download limits, and direct file uploads with LocalStack for development.
 
 This project showcases modern web development practices including cloud infrastructure, Infrastructure as Code (IaC), API design, and responsive frontend development.`,
-    email: "your-email@domain.com",
-    phone: "+1-234-567-8900",
+    email: "alex@santonastaso.com",
+    phone: "+44 7570 280428",
   },
   plugins: [
     `gatsby-plugin-image`,
@@ -37,8 +37,8 @@ This project showcases modern web development practices including cloud infrastr
     {
       resolve: `gatsby-plugin-robots-txt`,
       options: {
-        host: `https://your-domain.com`,
-        sitemap: `https://your-domain.com/sitemap-index.xml`,
+        host: `https://files.santonastaso.codes`,
+        sitemap: `https://files.santonastaso.codes/sitemap-index.xml`,
         policy: [
           {
             userAgent: `*`,
@@ -66,7 +66,7 @@ This project showcases modern web development practices including cloud infrastr
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Secure File Sharing Application`,
+        name: `Secure File Sharing - Alex Santonastaso`,
         short_name: `File Sharing`,
         start_url: `/`,
         background_color: `#ffffff`,

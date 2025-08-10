@@ -18,13 +18,14 @@ const Header = ({ metadata = {} }) => {
   const github = metadata.github;
   const linkedin = metadata.linkedin;
   const resume = metadata.resume;
+  const portfolioUrl = "https://santonastaso.codes"; // Your portfolio URL
 
   return (
     <div className={classes.wrapper}>
       <div className={classes.imageWrapper}>
         <div className={classes.logoContainer}>
           <a 
-            href="https://your-domain.com" 
+            href={portfolioUrl} 
             className={classes.logo}
           >
             {/* Clean minimalist glow effect */}
@@ -34,7 +35,7 @@ const Header = ({ metadata = {} }) => {
       </div>
       <div className={classes.contentWrapper}>
         <h1 className={classes.name}>
-          <a href="https://your-domain.com">{metadata.name}</a>
+          <a href={portfolioUrl}>{metadata.name}</a>
         </h1>
         <p className={classes.description}>{metadata.description}</p>
         <div className="flex items-center justify-between">
