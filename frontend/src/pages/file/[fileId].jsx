@@ -104,7 +104,7 @@ const FileRoute = ({ params }) => {
   };
 
   return (
-    <Layout>
+    <Layout pageTitle={`File Download (${file_id}) - Alex Santonastaso`} pageDescription="Download shared file securely">
       <Header metadata={metadata} />
       <div className="block pt-12 md:flex">
         <div className="pb-6 md:w-full md:max-w-150 md:p-0 animate-fade-in-up">

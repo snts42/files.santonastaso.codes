@@ -174,7 +174,7 @@ export default function IndexPage() {
 
 
   return (
-    <Layout>
+    <Layout pageTitle="Alex Santonastaso - Secure File Sharing">
       <Header metadata={metadata} />
       <Section title="File Upload" contentDelay="animate-fade-in-up-delay-100">
         <div className="space-y-6">
@@ -359,6 +359,5 @@ export default function IndexPage() {
       <SectionContact email={metadata.email} phone={metadata.phone} />
     </Layout>
   );
-}
-
+};
 

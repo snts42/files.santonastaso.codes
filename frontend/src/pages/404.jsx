@@ -24,7 +24,7 @@ export default function NotFoundPage() {
   const metadata = site.siteMetadata;
 
   return (
-    <Layout>
+    <Layout pageTitle="Page Not Found - Alex Santonastaso" pageDescription="The requested page could not be found.">
       <Header metadata={metadata} />
       <Section title="Page Not Found" contentDelay="animate-fade-in-up-delay-100">
         <div>

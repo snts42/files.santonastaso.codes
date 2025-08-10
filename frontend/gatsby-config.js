@@ -18,6 +18,7 @@ This project showcases modern web development practices including cloud infrastr
   },
   plugins: [
     `gatsby-plugin-image`,
+    `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
