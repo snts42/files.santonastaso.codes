@@ -1,92 +1,116 @@
-# 🚀 Deployment Script for files.santonastaso.codes
-# This script automates the deployment process
+#!/usr/bin/env pwsh
+# Personal Deployment Script for files.santonastaso.codes
+# Usage: ./deploy.ps1 [-BackendOnly] [-FrontendOnly] [-Local]
 
-Write-Host "🚀 Starting deployment of files.santonastaso.codes..." -ForegroundColor Green
+param(
+    [switch]$BackendOnly,
+    [switch]$FrontendOnly, 
+    [switch]$Local
+)
 
-# Step 1: Prepare Lambda Package
-Write-Host "📦 Step 1: Preparing Lambda package..." -ForegroundColor Yellow
-cd backend
+Write-Host "🚀 Starting deployment for files.santonastaso.codes..." -ForegroundColor Green
 
-# Create temporary directory for Lambda
-if (Test-Path "../temp-lambda") {
-    Remove-Item -Recurse -Force "../temp-lambda"
-}
-New-Item -ItemType Directory -Path "../temp-lambda"
+# Ensure personal config files are active
+Write-Host "📋 Setting up personal configuration files..." -ForegroundColor Yellow
 
-# Install dependencies
-Write-Host "Installing Python dependencies..." -ForegroundColor Cyan
-pip install -r requirements.txt -t ../temp-lambda/
+# Copy personal configs to active files
+Copy-Item "backend\.env.personal" "backend\.env" -Force
+Copy-Item "frontend\.env.personal" "frontend\.env.production" -Force  
+Copy-Item "terraform\terraform.tfvars.personal" "terraform\terraform.tfvars" -Force
 
-# Copy Python files
-Write-Host "Copying Python files..." -ForegroundColor Cyan
-Copy-Item "*.py" "../temp-lambda/"
+Write-Host "✅ Personal configuration files activated" -ForegroundColor Green
 
-# Create ZIP file
-Write-Host "Creating Lambda deployment package..." -ForegroundColor Cyan
-cd ../temp-lambda
-Compress-Archive -Path ".\*" -DestinationPath "..\terraform\lambda_function.zip" -Force
-
-# Clean up
-cd ..
-Remove-Item -Recurse -Force "temp-lambda"
-
-Write-Host "✅ Lambda package created successfully!" -ForegroundColor Green
-
-# Step 2: Deploy Infrastructure
-Write-Host "🏗️ Step 2: Deploying AWS infrastructure..." -ForegroundColor Yellow
-cd terraform
-
-# Plan deployment
-Write-Host "Planning Terraform deployment..." -ForegroundColor Cyan
-C:\terraform\terraform.exe plan
-
-# Ask for confirmation
-$confirmation = Read-Host "Do you want to apply these changes? (y/N)"
-if ($confirmation -eq 'y' -or $confirmation -eq 'Y') {
-    Write-Host "Applying Terraform changes..." -ForegroundColor Cyan
-    C:\terraform\terraform.exe apply -auto-approve
+if ($Local) {
+    Write-Host "🔧 Starting local development servers..." -ForegroundColor Yellow
     
-    # Get API Gateway URL
-    $apiUrl = C:\terraform\terraform.exe output -raw api_gateway_url
-    Write-Host "✅ Infrastructure deployed successfully!" -ForegroundColor Green
-    Write-Host "🌐 API Gateway URL: $apiUrl" -ForegroundColor Cyan
-} else {
-    Write-Host "❌ Deployment cancelled by user" -ForegroundColor Red
-    exit 1
+    # Start LocalStack if needed
+    Write-Host "Starting LocalStack (if installed)..."
+    try {
+        Start-Process "localstack" -ArgumentList "start" -NoNewWindow
+        Write-Host "✅ LocalStack started" -ForegroundColor Green
+    }
+    catch {
+        Write-Host "⚠️  LocalStack not found - using AWS directly" -ForegroundColor Yellow
+    }
+    
+    # Start backend
+    Write-Host "Starting backend server..."
+    Start-Process "powershell" -ArgumentList "-Command", "cd backend; uvicorn main:app --reload --port 8000"
+    
+    # Start frontend  
+    Write-Host "Starting frontend server..."
+    Start-Process "powershell" -ArgumentList "-Command", "cd frontend; npm start"
+    
+    Write-Host "🎉 Local development servers started!" -ForegroundColor Green
+    Write-Host "Backend: http://localhost:8000" -ForegroundColor Cyan
+    Write-Host "Frontend: http://localhost:8001" -ForegroundColor Cyan
+    return
 }
 
-cd ..
-
-# Step 3: Deploy Frontend
-Write-Host "🌐 Step 3: Deploying frontend to Vercel..." -ForegroundColor Yellow
-cd frontend
-
-# Check if Vercel CLI is installed
-try {
-    vercel --version | Out-Null
-    Write-Host "Vercel CLI found" -ForegroundColor Green
-} catch {
-    Write-Host "Installing Vercel CLI..." -ForegroundColor Cyan
-    npm install -g vercel
+if (-not $FrontendOnly) {
+    Write-Host "🔨 Building and deploying backend..." -ForegroundColor Yellow
+    
+    # Clean previous build
+    if (Test-Path "lambda-package") {
+        Remove-Item "lambda-package" -Recurse -Force
+    }
+    
+    # Build Lambda package
+    Write-Host "Building Lambda deployment package..."
+    New-Item -ItemType Directory -Name "lambda-package" -Force | Out-Null
+    
+    # Install dependencies
+    Set-Location "backend"
+    & python -m pip install -r requirements.txt --target "../lambda-package" --upgrade
+    
+    # Copy source files
+    Copy-Item "*.py" "../lambda-package/" -Force
+    
+    # Create ZIP file
+    Set-Location "../lambda-package"
+    Compress-Archive -Path "*" -DestinationPath "../terraform/lambda_function.zip" -Force
+    Set-Location ".."
+    
+    # Deploy infrastructure
+    Write-Host "Deploying infrastructure with Terraform..."
+    Set-Location "terraform"
+    & terraform apply -var-file="terraform.tfvars" -auto-approve
+    
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "✅ Backend deployed successfully!" -ForegroundColor Green
+    } else {
+        Write-Host "❌ Backend deployment failed!" -ForegroundColor Red
+        Set-Location ".."
+        exit 1
+    }
+    
+    Set-Location ".."
 }
 
-# Deploy to Vercel
-Write-Host "Deploying to Vercel..." -ForegroundColor Cyan
-Write-Host "Follow the prompts to configure your deployment:" -ForegroundColor Yellow
-Write-Host "- Set up and deploy: Yes" -ForegroundColor White
-Write-Host "- Which scope: Your account" -ForegroundColor White
-Write-Host "- Link to existing project: No" -ForegroundColor White
-Write-Host "- Project name: files-santonastaso-codes" -ForegroundColor White
-Write-Host "- Directory: ./" -ForegroundColor White
-Write-Host "- Override settings: No" -ForegroundColor White
+if (-not $BackendOnly) {
+    Write-Host "🌐 Deploying frontend..." -ForegroundColor Yellow
+    
+    Set-Location "frontend"
+    
+    # Build and deploy to Vercel
+    & vercel --prod
+    
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "✅ Frontend deployed successfully!" -ForegroundColor Green
+    } else {
+        Write-Host "❌ Frontend deployment failed!" -ForegroundColor Red
+        Set-Location ".."
+        exit 1
+    }
+    
+    Set-Location ".."
+}
 
-vercel --prod
+# Cleanup
+Write-Host "🧹 Cleaning up build artifacts..." -ForegroundColor Yellow
+if (Test-Path "lambda-package") {
+    Remove-Item "lambda-package" -Recurse -Force
+}
 
-cd ..
-
-Write-Host "🎉 Deployment completed!" -ForegroundColor Green
-Write-Host "Next steps:" -ForegroundColor Yellow
-Write-Host "1. Configure custom domain in Vercel dashboard" -ForegroundColor White
-Write-Host "2. Add DNS record: files.santonastaso.codes -> cname.vercel-dns.com" -ForegroundColor White
-Write-Host "3. Set environment variable GATSBY_API_BASE_URL in Vercel" -ForegroundColor White
-Write-Host "4. Test the application at https://files.santonastaso.codes" -ForegroundColor White
+Write-Host "🎉 Deployment completed successfully!" -ForegroundColor Green
+Write-Host "📊 Your application is live at: https://files.santonastaso.codes" -ForegroundColor Cyan

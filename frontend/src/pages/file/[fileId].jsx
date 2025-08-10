@@ -17,6 +17,10 @@ const FileRoute = ({ params }) => {
           github
           linkedin
           resume
+          repository
+          about
+          email
+          phone
         }
       }
     }
@@ -152,17 +156,15 @@ const FileRoute = ({ params }) => {
       <Section title="About" titleDelay="animate-fade-in-up-delay-100" contentDelay="animate-fade-in-up-delay-200">
         <div className="mb-6 text-gray-700 dark:text-gray-200">
           <p className="text-gray-600 dark:text-gray-400 mb-4">
-            A secure, minimal, private file-sharing tool built with FastAPI, AWS S3, DynamoDB, and Gatsby. 
-            Features include expiring links, download limits, and direct file uploads with LocalStack for development.
+            {metadata.about ? metadata.about.split('\n\n')[0] : 'A secure file sharing application with temporary links.'}
           </p>
           <p className="text-gray-600 dark:text-gray-400 mb-4">
-            This project showcases modern web development practices including cloud infrastructure, 
-            API design, and responsive frontend development.
+            {metadata.about ? metadata.about.split('\n\n')[1] || '' : 'Built with modern web technologies.'}
           </p>
           <p className="text-gray-600 dark:text-gray-400 mb-4">
             <span className="text-gray-700 dark:text-gray-300">Source code: </span>
             <a
-              href="https://github.com/snts42/files.santonastaso.codes"
+              href={metadata.repository || metadata.github}
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-900 dark:text-gray-100 hover:!text-cyan-400 transition-colors underline focus:outline-none focus:ring-2 focus:ring-cyan-400"

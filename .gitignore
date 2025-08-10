@@ -36,6 +36,13 @@ ENV/
 env.bak/
 venv.bak/
 
+# Gatsby build artifacts
+.cache/
+public/
+
+# Vercel deployment artifacts
+.vercel/
+
 # IDE
 .vscode/
 .idea/
@@ -92,6 +99,28 @@ jspm_packages/
 .env.test.local
 .env.production.local
 
+# Personal development files (not for public repo)
+.env.personal
+backend/.env.personal
+frontend/.env.personal
+frontend/gatsby-config.personal.js
+terraform/terraform.tfvars.personal
+
+# Active configuration files (copied from .personal)
+backend/.env
+frontend/.env.production
+terraform/terraform.tfvars
+
+# Personal deployment scripts
+deploy.ps1
+QUICK-COMMANDS.md
+PERSONAL-DEVELOPMENT.md
+
+# Personal reports (keep locally, don't push to GitHub)
+GITHUB-READY.md
+PRODUCTION-CHECKLIST.md
+REDUNDANCY-CLEANUP.md
+
 # Gatsby
 .cache/
 public
@@ -106,8 +135,17 @@ public
 .aws/
 
 # Temporary files
-temp-lambda/
 lambda_function.zip
+lambda-build/
+lambda-clean/
+lambda-full/
+
+# Build artifacts and backups
+*.backup
+*.bak
+*_minimal.zip
+*_full.zip
+*_complete.zip
 
 # Local development
 .env.local

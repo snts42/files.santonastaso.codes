@@ -5,7 +5,6 @@ import Header from '../components/Header';
 import Section from '../components/Section';
 import SectionContact from '../components/section-contact';
 import Button from '../components/Button';
-import Input from '../components/Input';
 import { API_BASE_URL } from '../utils/api';
 
 const expiryOptions = [
@@ -13,6 +12,14 @@ const expiryOptions = [
   { label: '6 hours', value: 6 },
   { label: '24 hours', value: 24 },
   { label: '72 hours', value: 72 },
+];
+
+const downloadOptions = [
+  { label: '1 download', value: 1 },
+  { label: '2 downloads', value: 2 },
+  { label: '3 downloads', value: 3 },
+  { label: '4 downloads', value: 4 },
+  { label: '5 downloads', value: 5 },
 ];
 
 export default function IndexPage() {
@@ -25,6 +32,8 @@ export default function IndexPage() {
           github
           linkedin
           resume
+          repository
+          about
           email
           phone
         }
@@ -115,23 +124,43 @@ export default function IndexPage() {
     setShareUrl('');
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('max_downloads', maxDownloads.toString());
-      formData.append('expires_in_hours', expiresInHours.toString());
-
-      const uploadResp = await fetch(`${API_BASE_URL}/upload-file`, {
+      // Debug logging
+      console.log('Attempting upload to:', `${API_BASE_URL}/upload`);
+      
+      // Step 1: Get presigned upload URL
+      const initResp = await fetch(`${API_BASE_URL}/upload`, {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          filename: file.name,
+          max_downloads: maxDownloads,
+          expires_in_hours: expiresInHours,
+        }),
+      });
+
+      if (!initResp.ok) {
+        const errorText = await initResp.text();
+        throw new Error(`Upload failed: ${initResp.status} - ${errorText}`);
+      }
+
+      const initResult = await initResp.json();
+      
+      // Step 2: Upload file directly to S3 using presigned URL
+      const uploadResp = await fetch(initResult.upload_url, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': file.type,
+        },
       });
 
       if (!uploadResp.ok) {
-        const errorText = await uploadResp.text();
-        throw new Error(`Upload failed: ${uploadResp.status} - ${errorText}`);
+        throw new Error(`S3 upload failed: ${uploadResp.status}`);
       }
 
-      const result = await uploadResp.json();
-      setShareUrl(result.download_page_url);
+      setShareUrl(initResult.download_page_url);
       // Clear the file to prevent multiple uploads of the same file
       setFile(null);
     } catch (err) {
@@ -184,7 +213,7 @@ export default function IndexPage() {
                   <div className="flex flex-col items-center justify-center h-full p-6 text-center">
                     {file ? (
                       <>
-                        <div className="text-2xl mb-2 animate-float">📄</div>
+                        <div className="text-2xl mb-2 animate-float">[FILE]</div>
                         <p className="text-sm font-display font-medium text-gray-700 dark:text-gray-200">{file.name}</p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                           {(file.size / 1024 / 1024).toFixed(2)} MB
@@ -224,14 +253,18 @@ export default function IndexPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input
-                label="Max downloads"
-                type="number"
-                min={1}
-                max={5}
-                value={maxDownloads}
-                onChange={(e) => setMaxDownloads(Number(e.target.value))}
-              />
+              <label className="block">
+                <span className="block mb-1 text-sm font-display font-medium text-gray-700 dark:text-gray-300">Max downloads</span>
+                <select
+                  className="w-full h-10 px-3 py-2 rounded-md border border-cyan-400 bg-white/80 dark:bg-[#1f2630]/80 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary shadow-sm hover:shadow-md hover:border-cyan-500 hover:scale-[1.02] transition-all duration-150"
+                  value={maxDownloads}
+                  onChange={(e) => setMaxDownloads(Number(e.target.value))}
+                >
+                  {downloadOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </label>
 
               <label className="block">
                 <span className="block mb-1 text-sm font-display font-medium text-gray-700 dark:text-gray-300">Expiry</span>
@@ -259,7 +292,7 @@ export default function IndexPage() {
               {error && (
                 <div className="animate-fade-in-up">
                   <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-md border border-red-200 dark:border-red-800">
-                    <span className="text-red-500">⚠️</span>
+                    <span className="text-red-500">[WARNING]</span>
                     <span>{error}</span>
                   </div>
                 </div>
@@ -274,7 +307,7 @@ export default function IndexPage() {
           {shareUrl && (
             <div className="animate-fade-in-up mt-6 mb-8 md:mb-12 p-4 rounded-lg bg-white/80 dark:bg-[#1f2630]/80 border border-cyan-400/60 shadow-md cursor-default transform hover:shadow-md hover:border-cyan-500 hover:scale-[1.02] transition-all duration-150">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-xl text-cyan-500 animate-pulse-scale">✓</span>
+                <span className="text-xl text-cyan-500 animate-pulse-scale">[OK]</span>
                 <p className="font-display font-medium text-gray-800 dark:text-gray-200">Link generated successfully</p>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Share this private download link:</p>
@@ -304,17 +337,15 @@ export default function IndexPage() {
       <Section title="About" titleDelay="animate-fade-in-up-delay-200" contentDelay="animate-fade-in-up-delay-300">
         <div className="mb-6 text-gray-700 dark:text-gray-200">
           <p className="text-gray-600 dark:text-gray-400 mb-4">
-            A secure, minimal, private file-sharing tool built with FastAPI, AWS S3, DynamoDB, and Gatsby. 
-            Features include expiring links, download limits, and direct file uploads with LocalStack for development.
+            {metadata.about ? metadata.about.split('\n\n')[0] : 'A secure file sharing application with temporary links.'}
           </p>
           <p className="text-gray-600 dark:text-gray-400 mb-4">
-            This project showcases modern web development practices including cloud infrastructure, 
-            API design, and responsive frontend development.
+            {metadata.about ? metadata.about.split('\n\n')[1] || '' : 'Built with modern web technologies.'}
           </p>
           <p className="text-gray-600 dark:text-gray-400">
             <span className="text-gray-700 dark:text-gray-300">Source code: </span>
             <a
-              href="https://github.com/snts42/files.santonastaso.codes"
+              href={metadata.repository || metadata.github}
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-900 dark:text-gray-100 hover:!text-cyan-400 transition-colors underline focus:outline-none focus:ring-2 focus:ring-cyan-400"

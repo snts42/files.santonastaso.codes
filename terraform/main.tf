@@ -1,4 +1,4 @@
-# Simplified AWS Infrastructure for files.santonastaso.codes
+# Secure File Sharing Infrastructure
 # Uses existing AWS user instead of creating IAM resources
 
 terraform {
@@ -21,7 +21,7 @@ resource "aws_s3_bucket" "files_bucket" {
 
   tags = {
     Environment = var.environment
-    Project     = "files-santonastaso-codes"
+    Project     = var.project_name
     ManagedBy   = "terraform"
   }
 }
@@ -174,16 +174,16 @@ output "deployment_instructions" {
   sensitive   = true
   value = <<-EOT
     
-    🎉 AWS Infrastructure Created Successfully!
+    AWS Infrastructure Created Successfully!
     
-    📋 Next Steps:
+    Next Steps:
     
     1. **Backend Deployment:**
        - Lambda function deployed with API Gateway
        - API URL: https://[API_GATEWAY_ID].execute-api.${var.aws_region}.amazonaws.com/${var.environment}
     
     2. **Frontend Deployment:**
-       - Deploy to Vercel with custom domain: files.santonastaso.codes
+       - Deploy to Vercel with custom domain: your-domain.com
        - Set GATSBY_API_BASE_URL to the API Gateway URL
     
     3. **Environment Variables for Backend:**
@@ -191,7 +191,7 @@ output "deployment_instructions" {
        S3_BUCKET_NAME=${aws_s3_bucket.files_bucket.bucket}
        DDB_TABLE_NAME=${aws_dynamodb_table.files_metadata.name}
        CORS_ORIGINS=${join(",", var.cors_origins)}
-       FRONTEND_BASE_URL=https://${var.domain_name}
+       FRONTEND_BASE_URL=https://your-domain.com
        USE_LOCALSTACK=false
     
     4. **Test the System:**
@@ -200,7 +200,7 @@ output "deployment_instructions" {
        - Check DynamoDB metadata
        - Test file expiry (3 days)
     
-    🔗 Resources Created:
+    Resources Created:
     - S3 Bucket: ${aws_s3_bucket.files_bucket.bucket}
     - DynamoDB Table: ${aws_dynamodb_table.files_metadata.name}
     - CloudWatch Logs: ${aws_cloudwatch_log_group.api_logs.name}

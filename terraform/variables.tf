@@ -18,15 +18,14 @@ variable "environment" {
 variable "project_name" {
   description = "Project name for resource naming"
   type        = string
-  default     = "files-santonastaso"
+  default     = "secure-file-sharing"
 }
 
 variable "cors_origins" {
   description = "Allowed CORS origins for S3 bucket"
   type        = list(string)
   default = [
-    "https://files.santonastaso.codes",
-    "https://santonastaso.codes",
+    "https://your-domain.com",
     "http://localhost:8000",
     "http://localhost:3000"
   ]
@@ -35,7 +34,7 @@ variable "cors_origins" {
 variable "file_retention_days" {
   description = "Number of days to retain files in S3 before deletion"
   type        = number
-  default     = 3  # Optimized for free tier - shorter retention
+  default     = 7  # Optimized for free tier - shorter retention
 
   validation {
     condition     = var.file_retention_days >= 1 && var.file_retention_days <= 365
@@ -65,17 +64,17 @@ variable "use_lambda" {
 variable "domain_name" {
   description = "Custom domain name for the application"
   type        = string
-  default     = "files.santonastaso.codes"
+  default     = "your-domain.com"
 }
 
 variable "s3_bucket_name" {
   description = "Name for the S3 bucket (must be globally unique)"
   type        = string
-  default     = "files-santonastaso-codes"
+  default     = "your-unique-bucket-name"
 }
 
 variable "dynamodb_table_name" {
   description = "Name for the DynamoDB table"
   type        = string
-  default     = "files-santonastaso-metadata"
+  default     = "secure-file-sharing-metadata"
 }

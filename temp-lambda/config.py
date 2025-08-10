@@ -70,10 +70,3 @@ def get_settings() -> Settings:
     return settings
 
 
-def get_aws_endpoint_url(settings: Settings = None) -> str:
-    """Get AWS endpoint URL based on LocalStack configuration."""
-    if settings is None:
-        settings = get_settings()
-    return settings.localstack_endpoint_url if settings.use_localstack else None
-
-

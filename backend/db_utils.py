@@ -100,8 +100,8 @@ def ensure_table_exists(
                 'Enabled': True
             }
         )
-        print(f"✅ TTL enabled on {table_name}")
+        print(f"[OK] TTL enabled on {table_name}")
     except ClientError as e:
-        print(f"⚠️ Could not enable TTL: {e}")  # LocalStack might not support TTL
+        print(f"[WARNING] Could not enable TTL: {e}")  # LocalStack might not support TTL
 
 

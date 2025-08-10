@@ -4,15 +4,14 @@
 # AWS Configuration
 aws_region = "us-east-1"
 environment = "production"
-project_name = "files-santonastaso"
+project_name = "secure-file-sharing"
 
 # Domain Configuration
-domain_name = "files.santonastaso.codes"
+domain_name = "your-domain.com"
 
 # CORS Origins (add your domains)
 cors_origins = [
-  "https://files.santonastaso.codes",
-  "https://santonastaso.codes",
+  "https://your-domain.com",
   "http://localhost:8000",  # Keep for development
   "http://localhost:3000"   # Keep for development
 ]

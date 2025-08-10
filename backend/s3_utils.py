@@ -85,10 +85,10 @@ def delete_s3_object(
     try:
         s3 = get_s3_client(region_name=region_name, endpoint_url=endpoint_url, force_path_style=force_path_style)
         s3.delete_object(Bucket=bucket, Key=key)
-        print(f"✅ Deleted S3 object: {bucket}/{key}")
+        print(f"[OK] Deleted S3 object: {bucket}/{key}")
         return True
     except ClientError as e:
-        print(f"❌ Failed to delete S3 object {bucket}/{key}: {e}")
+        print(f"[ERROR] Failed to delete S3 object {bucket}/{key}: {e}")
         return False
 
 

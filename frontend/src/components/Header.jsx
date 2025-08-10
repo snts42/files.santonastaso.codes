@@ -24,7 +24,7 @@ const Header = ({ metadata = {} }) => {
       <div className={classes.imageWrapper}>
         <div className={classes.logoContainer}>
           <a 
-            href="https://santonastaso.codes" 
+            href="https://your-domain.com" 
             className={classes.logo}
           >
             {/* Clean minimalist glow effect */}
@@ -34,7 +34,7 @@ const Header = ({ metadata = {} }) => {
       </div>
       <div className={classes.contentWrapper}>
         <h1 className={classes.name}>
-          <a href="https://santonastaso.codes">{metadata.name}</a>
+          <a href="https://your-domain.com">{metadata.name}</a>
         </h1>
         <p className={classes.description}>{metadata.description}</p>
         <div className="flex items-center justify-between">
@@ -61,7 +61,7 @@ const Header = ({ metadata = {} }) => {
               </li>
             )}
             <li className={`${classes.item} hidden md:inline`}>
-              <a className={classes.link} href="https://santonastaso.codes" target="_blank" rel="noopener noreferrer">
+              <a className={classes.link} href="https://your-domain.com" target="_blank" rel="noopener noreferrer">
                 Portfolio
               </a>
             </li>

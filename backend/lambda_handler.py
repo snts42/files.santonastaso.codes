@@ -25,10 +25,19 @@ def lambda_handler(event, context):
         return response
     
     try:
+        # Log the event for debugging
+        print(f"Lambda event: {json.dumps(event)}")
+        print(f"Lambda context: {context.function_name}")
+        
         # Process the request through Mangum
         response = handler(event, context)
         return add_cors_headers(response)
     except Exception as e:
+        # Log the full error for debugging
+        import traceback
+        print(f"Lambda error: {str(e)}")
+        print(f"Traceback: {traceback.format_exc()}")
+        
         # Return error response with CORS headers
         error_response = {
             'statusCode': 500,
@@ -40,7 +49,7 @@ def lambda_handler(event, context):
             },
             'body': json.dumps({
                 'error': 'Internal server error',
-                'message': str(e) if context.invoked_function_arn.endswith(':dev') else 'Something went wrong'
+                'message': str(e)  # Always show the error for debugging
             })
         }
         return error_response

@@ -9,7 +9,7 @@ import time
 from fastapi import FastAPI, HTTPException, Query, UploadFile, File, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 
-from config import get_settings
+from config import get_settings, get_aws_endpoint_url
 from db_utils import (
     get_file_metadata,
     put_file_metadata,
@@ -28,7 +28,7 @@ from s3_utils import (
 from s3_lifecycle import setup_s3_lifecycle_policy
 
 
-app = FastAPI(title="files.santonastaso.codes API")
+app = FastAPI(title="Secure File Sharing API")
 settings = get_settings()
 
 # Simple in-memory rate limiting (for production, use Redis)
@@ -442,9 +442,9 @@ def download(file_id: str = Query(..., min_length=1)) -> DownloadResponse:
                 force_path_style=settings.s3_force_path_style,
             )
             if delete_success:
-                print(f"✅ File {s3_key} successfully deleted from S3 after download completion")
+                print(f"[OK] File {s3_key} successfully deleted from S3 after download completion")
             else:
-                print(f"⚠️ Failed to delete file {s3_key} from S3 after download completion")
+                print(f"[WARNING] Failed to delete file {s3_key} from S3 after download completion")
         
         # Start background deletion
         threading.Thread(target=delayed_delete, daemon=True).start()

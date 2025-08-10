@@ -12,14 +12,16 @@ resource "aws_lambda_function" "api" {
 
   environment {
     variables = {
+      REGION     = var.aws_region
       S3_BUCKET_NAME = aws_s3_bucket.files_bucket.bucket
       DDB_TABLE_NAME = aws_dynamodb_table.files_metadata.name
       ENVIRONMENT    = var.environment
-      AWS_REGION     = var.aws_region
       CORS_ORIGINS   = join(",", var.cors_origins)
       FRONTEND_BASE_URL = "https://${var.domain_name}"
       USE_LOCALSTACK = "false"
       AWS_S3_FORCE_PATH_STYLE = "false"
+      PRESIGNED_UPLOAD_TTL_SECONDS = "900"
+      PRESIGNED_DOWNLOAD_TTL_SECONDS = "120"
     }
   }
 
@@ -31,7 +33,7 @@ resource "aws_lambda_function" "api" {
   tags = {
     Environment = var.environment
     ManagedBy   = "terraform"
-    Project     = "files-santonastaso-codes"
+    Project     = var.project_name
   }
 }
 
@@ -57,7 +59,7 @@ resource "aws_iam_role" "lambda_role" {
   tags = {
     Environment = var.environment
     ManagedBy   = "terraform"
-    Project     = "files-santonastaso-codes"
+    Project     = "${var.project_name}"
   }
 }
 
@@ -113,7 +115,7 @@ resource "aws_api_gateway_rest_api" "files_api" {
   tags = {
     Environment = var.environment
     ManagedBy   = "terraform"
-    Project     = "files-santonastaso-codes"
+    Project     = "${var.project_name}"
   }
 }
 
