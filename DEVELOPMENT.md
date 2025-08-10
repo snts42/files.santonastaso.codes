@@ -81,11 +81,11 @@ docker run --rm -it -p 4566:4566 localstack/localstack
 
 # Terminal 2: Start backend
 cd backend
-uvicorn main:app --reload --port 8000
+uvicorn main:app --reload --port 8001
 
 # Terminal 3: Start frontend
 cd frontend
-npm start
+npm run develop
 ```
 
 **LocalStack features**:
@@ -107,8 +107,8 @@ aws configure
 echo "USE_LOCALSTACK=false" >> backend/.env
 
 # Start development servers
-cd backend && uvicorn main:app --reload &
-cd frontend && npm start
+cd backend && uvicorn main:app --reload --host 0.0.0.0 --port 8001 &
+cd frontend && npm run develop
 ```
 
 ## API Testing
@@ -128,20 +128,27 @@ curl -X POST http://localhost:8000/upload \
 curl http://localhost:8000/download/{file_id}
 ```
 
-### Automated Testing
+### Development Testing
 
 ```bash
-# Backend unit tests
+# Test backend API endpoints
 cd backend
-python -m pytest tests/ -v
 
-# Frontend tests
+# Health check
+curl http://localhost:8001/health
+
+# Upload test
+curl -X POST http://localhost:8001/upload \
+  -H "Content-Type: application/json" \
+  -d '{"filename": "test.txt", "content_type": "text/plain"}'
+
+# Frontend development server  
 cd frontend
-npm test
+npm run develop  # Starts on http://localhost:8000
 
-# Integration tests (requires running backend)
-cd backend
-python -m pytest tests/integration/ -v
+# Production build test
+npm run build
+npm run serve  # Test built version
 ```
 
 ## Development Workflow
@@ -243,7 +250,7 @@ python -c "from db_utils import get_dynamodb_table; table = get_dynamodb_table()
 Enable development mode:
 ```bash
 cd frontend
-npm start  # Runs with hot reload and detailed errors
+npm run develop  # Runs with hot reload and detailed errors
 ```
 
 Check build output:
@@ -302,12 +309,11 @@ docker stop localstack
 ### End-to-End Testing
 
 ```bash
-# Start all services
-docker-compose up -d  # If you have docker-compose.yml
+# Start LocalStack manually
+docker run --rm -d -p 4566:4566 --name localstack localstack/localstack
 
-# Run E2E tests
-cd frontend
-npm run test:e2e      # If configured
+# Test the application manually
+# (No automated E2E tests currently implemented)
 
 # Manual E2E test
 curl -X POST http://localhost:8000/upload \
@@ -500,7 +506,7 @@ AWS_REGION=us-east-1
 4. **Run backend with LocalStack**:
 ```bash
 cd backend
-uvicorn main:app --reload --port 8000
+uvicorn main:app --reload --port 8001
 # Resources will be created automatically
 ```
 
@@ -550,8 +556,8 @@ The application automatically detects LocalStack mode and:
 
 ### Daily Development
 1. Start LocalStack (if using local development)
-2. Run backend: `cd backend && uvicorn main:app --reload`
-3. Run frontend: `cd frontend && npm start`
+2. Run backend: `cd backend && uvicorn main:app --reload --host 0.0.0.0 --port 8001`
+3. Run frontend: `cd frontend && npm run develop`
 4. Test features end-to-end
 
 ### Deployment Testing

@@ -6,12 +6,12 @@ This file explains how to set up your personal configuration for development and
 
 ### For Development with Your Personal Branding
 
-1. **Copy the personal config template**:
+1. **Create your personal config from current template**:
 ```bash
-cp frontend/gatsby-config.personal.js.example frontend/gatsby-config.personal.js
+cp frontend/gatsby-config.js frontend/gatsby-config.personal.js
 ```
 
-2. **Edit with your information**:
+2. **Edit gatsby-config.personal.js with your information**:
 ```javascript
 // frontend/gatsby-config.personal.js
 module.exports = {
@@ -46,7 +46,7 @@ cp frontend/gatsby-config.personal.js frontend/gatsby-config.js
 
 1. **Copy environment template**:
 ```bash
-cp backend/.env.personal.example backend/.env.personal
+cp .env.personal.example .env.personal
 ```
 
 2. **Add your AWS credentials and settings**:
@@ -80,7 +80,7 @@ domain_name = "your-domain.com"
 ```bash
 # Use personal configs (gitignored)
 cp frontend/gatsby-config.personal.js frontend/gatsby-config.js
-cp backend/.env.personal backend/.env
+cp .env.personal .env
 cp terraform/terraform.tfvars.personal terraform/terraform.tfvars
 
 # Deploy
@@ -90,7 +90,7 @@ cp terraform/terraform.tfvars.personal terraform/terraform.tfvars
 ### GitHub Contribution
 ```bash
 # Use generic configs (committed to repo)  
-cp frontend/gatsby-config.js.example frontend/gatsby-config.js
+# (gatsby-config.js is already generic in the repo)
 cp backend/env.example backend/.env
 cp terraform/terraform.tfvars.example terraform/terraform.tfvars
 
