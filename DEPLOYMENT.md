@@ -137,6 +137,9 @@ npx vercel --prod
 
 **Option B: Vercel Dashboard**
 1. Connect GitHub repository to Vercel
+2. Set build command to: `npm run build:quiet`
+3. Set output directory to: `public`
+4. Set environment variables in Vercel dashboard
 2. Set environment variables in Vercel dashboard
 3. Deploy automatically on push
 

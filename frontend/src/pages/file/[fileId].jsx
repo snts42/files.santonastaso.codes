@@ -1,32 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useStaticQuery, graphql } from 'gatsby';
 import axios from 'axios';
 import Layout from '../../components/Layout';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import Section from '../../components/Section';
+import SEO from '../../components/SEO';
 import { API_BASE_URL } from '../../utils/api';
+import { useSiteMetadata } from '../../hooks/useSiteMetadata';
 
 const FileRoute = ({ params }) => {
-  const { site } = useStaticQuery(graphql`
-    query {
-      site {
-        siteMetadata {
-          name
-          description
-          github
-          linkedin
-          resume
-          repository
-          about
-          email
-          phone
-        }
-      }
-    }
-  `);
-
-  const metadata = site.siteMetadata;
+  const metadata = useSiteMetadata();
 
   // Get file_id from the URL parameter
   const file_id = params.fileId;
@@ -104,7 +87,7 @@ const FileRoute = ({ params }) => {
   };
 
   return (
-    <Layout pageTitle={`File Download (${file_id}) - Alex Santonastaso`} pageDescription="Download shared file securely">
+    <Layout>
       <Header metadata={metadata} />
       <div className="block pt-12 md:flex">
         <div className="pb-6 md:w-full md:max-w-150 md:p-0 animate-fade-in-up">
@@ -187,3 +170,15 @@ const FileRoute = ({ params }) => {
 };
 
 export default FileRoute;
+
+export function Head({ params }) {
+  return (
+    <SEO 
+      title="Secure File Download"
+      description="Download your secure file. This link expires after use or time limit for your privacy and security."
+      pathname={`/file/${params.fileId}`}
+      isFilePage={true}
+      keywords="secure file download, private file sharing, temporary download link"
+    />
+  );
+}

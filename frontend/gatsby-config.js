@@ -4,8 +4,9 @@ module.exports = {
     siteUrl: `https://files.santonastaso.codes`,
     name: 'Alex Santonastaso',
     title: `Alex Santonastaso - Secure File Sharing`,
-    description: `Secure, private file sharing `,
+    description: `Secure, private file sharing`,
     author: `Alex Santonastaso`,
+    keywords: `secure file sharing, private file transfer, temporary links, file upload, download limits, Alex Santonastaso, web developer`,
     github: `https://github.com/snts42`,
     linkedin: `https://www.linkedin.com/in/alex-santonastaso/`,
     resume: "https://santonastaso.codes/Alex-Santonastaso-CV.pdf",
@@ -18,7 +19,6 @@ This project showcases modern web development practices including cloud infrastr
   },
   plugins: [
     `gatsby-plugin-image`,
-    `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
@@ -32,7 +32,48 @@ This project showcases modern web development practices including cloud infrastr
     {
       resolve: `gatsby-plugin-sitemap`,
       options: {
-        excludes: [`/404/`, `/404.html`],
+        excludes: [`/404/`, `/404.html`, `/dev-404-page/`],
+        query: `
+          {
+            allSitePage {
+              nodes {
+                path
+              }
+            }
+            site {
+              siteMetadata {
+                siteUrl
+              }
+            }
+          }
+        `,
+        resolvePages: ({
+          allSitePage: { nodes: allPages },
+        }) => {
+          return allPages.map(page => {
+            return { ...page }
+          })
+        },
+        serialize: ({ path, modifiedGmt }) => {
+          // Set priority based on path
+          let priority = 0.5;
+          let changefreq = 'monthly';
+          
+          if (path === '/') {
+            priority = 1.0;
+            changefreq = 'weekly';
+          } else if (path.startsWith('/file/')) {
+            priority = 0.3;
+            changefreq = 'never';
+          }
+          
+          return {
+            url: path,
+            lastmod: modifiedGmt,
+            priority: priority,
+            changefreq: changefreq,
+          }
+        },
       },
     },
     {
@@ -50,20 +91,20 @@ This project showcases modern web development practices including cloud infrastr
       },
     },
     // Personal GA4 property for files.santonastaso.codes
-    // {
-    //   resolve: `gatsby-plugin-google-gtag`,
-    //   options: {
-    //     trackingIds: [
-    //       "G-YOUR-GA4-ID", // Google Analytics 4 property ID
-    //     ],
-    //     pluginConfig: {
-    //       head: false,
-    //       respectDNT: true,
-    //       exclude: ["/preview/**", "/do-not-track/me/too/"],
-    //       delayOnRouteUpdate: 0,
-    //     },
-    //   },
-    // },
+    {
+      resolve: `gatsby-plugin-google-gtag`,
+      options: {
+        trackingIds: [
+          "G-CY46V1Z76D", // Google Analytics 4 property ID
+        ],
+        pluginConfig: {
+          head: false,
+          respectDNT: true,
+          exclude: ["/preview/**", "/do-not-track/me/too/"],
+          delayOnRouteUpdate: 0,
+        },
+      },
+    },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
@@ -74,6 +115,9 @@ This project showcases modern web development practices including cloud infrastr
         theme_color: `#06b6d4`,
         display: `minimal-ui`,
         icon: `src/images/icon.png`, // This path is relative to the root of the site.
+        // Disable icon in social media sharing
+        include_favicon: false,
+        legacy: false,
       },
     },
   ],

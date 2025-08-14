@@ -147,8 +147,9 @@ cd frontend
 npm run develop  # Starts on http://localhost:8000
 
 # Production build test
-npm run build
-npm run serve  # Test built version
+npm run build         # Standard build with all output
+npm run build:quiet   # Clean build without warnings (production)
+npm run serve         # Test built version
 ```
 
 ## Development Workflow

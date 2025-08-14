@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { useStaticQuery, graphql } from 'gatsby';
 import Layout from '../components/Layout';
 import Header from '../components/Header';
 import Section from '../components/Section';
 import SectionContact from '../components/section-contact';
 import Button from '../components/Button';
+import SEO from '../components/SEO';
 import { API_BASE_URL } from '../utils/api';
+import { useSiteMetadata } from '../hooks/useSiteMetadata';
 
 const expiryOptions = [
   { label: '1 hour', value: 1 },
@@ -23,25 +24,7 @@ const downloadOptions = [
 ];
 
 export default function IndexPage() {
-  const { site } = useStaticQuery(graphql`
-    query {
-      site {
-        siteMetadata {
-          name
-          description
-          github
-          linkedin
-          resume
-          repository
-          about
-          email
-          phone
-        }
-      }
-    }
-  `);
-
-  const metadata = site.siteMetadata;
+  const metadata = useSiteMetadata();
 
   const [file, setFile] = useState(null);
   const [maxDownloads, setMaxDownloads] = useState(1);
@@ -124,9 +107,6 @@ export default function IndexPage() {
     setShareUrl('');
 
     try {
-      // Debug logging
-      console.log('Attempting upload to:', `${API_BASE_URL}/upload`);
-      
       // Step 1: Get presigned upload URL
       const initResp = await fetch(`${API_BASE_URL}/upload`, {
         method: 'POST',
@@ -174,7 +154,7 @@ export default function IndexPage() {
 
 
   return (
-    <Layout pageTitle="Alex Santonastaso - Secure File Sharing">
+    <Layout>
       <Header metadata={metadata} />
       <Section title="File Upload" contentDelay="animate-fade-in-up-delay-100">
         <div className="space-y-6">
@@ -359,5 +339,16 @@ export default function IndexPage() {
       <SectionContact email={metadata.email} phone={metadata.phone} />
     </Layout>
   );
-};
+}
+
+export function Head() {
+  return (
+    <SEO 
+      title="Secure File Sharing"
+      description="Upload and share files securely with expiring links and download limits. Built by Alex Santonastaso with modern web technologies."
+      keywords="secure file sharing, private file transfer, temporary download links, file upload, Alex Santonastaso"
+      pathname="/"
+    />
+  );
+}
 

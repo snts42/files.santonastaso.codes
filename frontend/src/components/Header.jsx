@@ -62,7 +62,7 @@ const Header = ({ metadata = {} }) => {
               </li>
             )}
             <li className={`${classes.item} hidden md:inline`}>
-              <a className={classes.link} href="https://your-domain.com" target="_blank" rel="noopener noreferrer">
+              <a className={classes.link} href={portfolioUrl} target="_blank" rel="noopener noreferrer">
                 Portfolio
               </a>
             </li>

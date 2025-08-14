@@ -185,6 +185,12 @@
 @layer utilities {
   .max-w-150 { max-width: 150px; }
   .top-5 { top: 5%; }
+  
+  /* Reusable gradient utilities for consistency */
+  .bg-cyan-glow-light { @apply bg-gradient-to-br from-cyan-400/10 to-cyan-500/10; }
+  .bg-cyan-glow-dark { @apply dark:from-cyan-400/20 dark:to-cyan-500/20; }
+  .hover-cyan-glow-light { @apply hover:from-cyan-400/20 hover:to-cyan-500/20; }
+  .hover-cyan-glow-dark { @apply dark:hover:from-cyan-400/30 dark:hover:to-cyan-500/30; }
 }
 
 code[class*='language-'],

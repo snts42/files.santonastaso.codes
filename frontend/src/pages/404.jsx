@@ -1,30 +1,15 @@
 import React from 'react';
-import { useStaticQuery, graphql } from 'gatsby';
 import Layout from '../components/Layout';
 import Header from '../components/Header';
 import Section from '../components/Section';
+import SEO from '../components/SEO';
+import { useSiteMetadata } from '../hooks/useSiteMetadata';
 
 export default function NotFoundPage() {
-  const { site } = useStaticQuery(graphql`
-    query {
-      site {
-        siteMetadata {
-          name
-          description
-          github
-          linkedin
-          resume
-          email
-          phone
-        }
-      }
-    }
-  `);
-
-  const metadata = site.siteMetadata;
+  const metadata = useSiteMetadata();
 
   return (
-    <Layout pageTitle="Page Not Found - Alex Santonastaso" pageDescription="The requested page could not be found.">
+    <Layout>
       <Header metadata={metadata} />
       <Section title="Page Not Found" contentDelay="animate-fade-in-up-delay-100">
         <div>
@@ -40,6 +25,17 @@ export default function NotFoundPage() {
         </div>
       </Section>
     </Layout>
+  );
+}
+
+export function Head() {
+  return (
+    <SEO 
+      title="Page Not Found" 
+      description="The requested page could not be found. Return to secure file sharing homepage."
+      pathname="/404/"
+      keywords="404, page not found, Alex Santonastaso"
+    />
   );
 }
 
