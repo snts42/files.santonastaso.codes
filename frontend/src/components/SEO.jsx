@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSiteMetadata } from '../hooks/useSiteMetadata';
 
-const SEO = ({ title, description, pathname, isFilePage, keywords, image }) => {
+const Seo = ({ title, description, pathname, isFilePage, keywords, image }) => {
   const metadata = useSiteMetadata();
 
   // Determine the appropriate title and description
@@ -129,4 +129,4 @@ const SEO = ({ title, description, pathname, isFilePage, keywords, image }) => {
   );
 };
 
-export default SEO;
+export default Seo;

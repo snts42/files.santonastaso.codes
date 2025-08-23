@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import Section from '../components/Section';
 import SectionContact from '../components/section-contact';
 import Button from '../components/Button';
-import SEO from '../components/SEO';
+import Seo from '../components/SEO';
 import { API_BASE_URL } from '../utils/api';
 import { useSiteMetadata } from '../hooks/useSiteMetadata';
 
@@ -193,7 +193,11 @@ export default function IndexPage() {
                   <div className="flex flex-col items-center justify-center h-full p-6 text-center">
                     {file ? (
                       <>
-                        <div className="text-2xl mb-2 animate-float">[FILE]</div>
+                        <div className="text-cyan-500 mb-3 animate-float">
+                          <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                        </div>
                         <p className="text-sm font-display font-medium text-gray-700 dark:text-gray-200">{file.name}</p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                           {(file.size / 1024 / 1024).toFixed(2)} MB
@@ -236,7 +240,7 @@ export default function IndexPage() {
               <label className="block">
                 <span className="block mb-1 text-sm font-display font-medium text-gray-700 dark:text-gray-300">Max downloads</span>
                 <select
-                  className="w-full h-10 px-3 py-2 rounded-md border border-cyan-400 bg-white/80 dark:bg-[#1f2630]/80 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary shadow-sm hover:shadow-md hover:border-cyan-500 hover:scale-[1.02] transition-all duration-150"
+                  className="w-full h-10 px-3 py-2 rounded-md border border-cyan-400 bg-white/80 dark:bg-[#1f2630]/80 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 shadow-sm hover:shadow-md hover:border-cyan-500 hover:scale-[1.02] transition-all duration-150"
                   value={maxDownloads}
                   onChange={(e) => setMaxDownloads(Number(e.target.value))}
                 >
@@ -249,7 +253,7 @@ export default function IndexPage() {
               <label className="block">
                 <span className="block mb-1 text-sm font-display font-medium text-gray-700 dark:text-gray-300">Expiry</span>
                 <select
-                  className="w-full h-10 px-3 py-2 rounded-md border border-cyan-400 bg-white/80 dark:bg-[#1f2630]/80 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary shadow-sm hover:shadow-md hover:border-cyan-500 hover:scale-[1.02] transition-all duration-150"
+                  className="w-full h-10 px-3 py-2 rounded-md border border-cyan-400 bg-white/80 dark:bg-[#1f2630]/80 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 shadow-sm hover:shadow-md hover:border-cyan-500 hover:scale-[1.02] transition-all duration-150"
                   value={expiresInHours}
                   onChange={(e) => setExpiresInHours(Number(e.target.value))}
                 >
@@ -343,7 +347,7 @@ export default function IndexPage() {
 
 export function Head() {
   return (
-    <SEO 
+    <Seo 
       title="Secure File Sharing"
       description="Upload and share files securely with expiring links and download limits. Built by Alex Santonastaso with modern web technologies."
       keywords="secure file sharing, private file transfer, temporary download links, file upload, Alex Santonastaso"

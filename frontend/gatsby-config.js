@@ -116,7 +116,7 @@ This project showcases modern web development practices including cloud infrastr
         display: `minimal-ui`,
         icon: `src/images/icon.png`, // This path is relative to the root of the site.
         // Disable icon in social media sharing
-        include_favicon: false,
+        include_favicon: true,
         legacy: false,
       },
     },

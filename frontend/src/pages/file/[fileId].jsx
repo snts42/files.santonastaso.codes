@@ -4,7 +4,7 @@ import Layout from '../../components/Layout';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import Section from '../../components/Section';
-import SEO from '../../components/SEO';
+import Seo from '../../components/SEO';
 import { API_BASE_URL } from '../../utils/api';
 import { useSiteMetadata } from '../../hooks/useSiteMetadata';
 
@@ -173,7 +173,7 @@ export default FileRoute;
 
 export function Head({ params }) {
   return (
-    <SEO 
+    <Seo 
       title="Secure File Download"
       description="Download your secure file. This link expires after use or time limit for your privacy and security."
       pathname={`/file/${params.fileId}`}

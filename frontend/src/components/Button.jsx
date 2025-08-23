@@ -7,7 +7,7 @@ const Button = ({ children, onClick, type = 'button', disabled = false, classNam
     text-sm font-display font-medium
     rounded-md
     transition-all duration-150
-    focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+    focus:outline-none focus:ring-2 focus:ring-cyan-400
     disabled:opacity-50 disabled:cursor-not-allowed
     transform hover:scale-105 active:scale-95
     ${className}
@@ -55,5 +55,3 @@ const Button = ({ children, onClick, type = 'button', disabled = false, classNam
 };
 
 export default Button;
-
-

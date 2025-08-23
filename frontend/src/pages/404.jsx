@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '../components/Layout';
 import Header from '../components/Header';
 import Section from '../components/Section';
-import SEO from '../components/SEO';
+import Seo from '../components/SEO';
 import { useSiteMetadata } from '../hooks/useSiteMetadata';
 
 export default function NotFoundPage() {
@@ -30,7 +30,7 @@ export default function NotFoundPage() {
 
 export function Head() {
   return (
-    <SEO 
+    <Seo 
       title="Page Not Found" 
       description="The requested page could not be found. Return to secure file sharing homepage."
       pathname="/404/"

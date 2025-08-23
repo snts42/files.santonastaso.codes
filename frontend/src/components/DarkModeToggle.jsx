@@ -85,14 +85,14 @@ const DarkModeToggle = ({ mobile = false }) => {
         rounded-full shadow-lg hover:shadow-cyan-400/30 p-3
         transition-all duration-150
         hover:scale-105 active:scale-95
-        focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2
+        focus:outline-none focus:ring-2 focus:ring-cyan-400
         group relative overflow-hidden
       "
       onClick={() => setDark(!dark)}
       type="button"
     >
       {/* Glowing background effect */}
-      <div className="absolute inset-0 bg-cyan-glow-light bg-cyan-glow-dark rounded-full hover-cyan-glow-light hover-cyan-glow-dark transition-all duration-150"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-cyan-500/10 dark:from-cyan-400/20 dark:to-cyan-500/20 rounded-full group-hover:from-cyan-400/20 group-hover:to-cyan-500/20 dark:group-hover:from-cyan-400/30 dark:group-hover:to-cyan-500/30 transition-all duration-150"></div>
       
       {/* Icon container */}
       <div className="relative flex items-center justify-center w-6 h-6">
@@ -120,5 +120,3 @@ const DarkModeToggle = ({ mobile = false }) => {
 };
 
 export default DarkModeToggle;
-
-
